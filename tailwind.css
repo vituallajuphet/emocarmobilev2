@@ -1,0 +1,37 @@
+.mt-4 {
+  margin-top: 1rem
+}
+
+.h-full {
+  height: 100%
+}
+
+.w-\[70\%\] {
+  width: 70%
+}
+
+.flex-1 {
+  flex: 1 1 0%
+}
+
+.items-center {
+  align-items: center
+}
+
+.justify-center {
+  justify-content: center
+}
+
+.bg-green-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(134 239 172 / var(--tw-bg-opacity))
+}
+
+.p-4 {
+  padding: 1rem
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem
+}

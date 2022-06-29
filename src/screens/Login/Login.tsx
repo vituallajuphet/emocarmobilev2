@@ -4,29 +4,21 @@ import {useTailwind} from 'tailwind-rn/dist';
 import {Button, TextInput} from 'react-native-paper';
 import {Context} from '../../context';
 import { useNavigation } from '@react-navigation/native';
+import { loginUser } from '../../store/reducers/userReducer';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Login: React.FC = () => {
   const tw = useTailwind();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const context = useContext(Context);
   const navigation = useNavigation();
-  const {state, dispatch} = context;
+  const dispatch = useDispatch()
 
-
-  useEffect(() => {
-
-    console.log(state);
-    
-    if(state.user.isLoggedIn){
-        navigation.navigate('home')
-    }
-  }, [state])
+  const user = useSelector((state) => state.userstate.userdata)
   
-
   const loginAccount = () => {
-    dispatch({type:'login'})
+    dispatch(loginUser({email, password}))
   };
 
   return (

@@ -10,20 +10,21 @@
 
 import React from 'react';
 import {SafeAreaView, Text} from 'react-native';
-import {Login} from './src/screens'
+import {Login} from './src/screens';
 import {TailwindProvider} from 'tailwind-rn';
-import tailwind from './tailwind.json'
+import tailwind from './tailwind.json';
 import Routes from './src/routes';
-import { Provider } from './src/context';
+import {Provider as StoreProvider} from 'react-redux';
+import store from './src/store';
 
 const App = () => {
   return (
+    <StoreProvider store={store}>
       <TailwindProvider utilities={tailwind}>
-          <Provider>
-            <Routes />
-          </Provider>
+        <Routes />
       </TailwindProvider>
-  )
+    </StoreProvider>
+  );
 };
 
 export default App;

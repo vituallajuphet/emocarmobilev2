@@ -1,5 +1,13 @@
+.mt-1 {
+  margin-top: 0.25rem
+}
+
 .mt-4 {
   margin-top: 1rem
+}
+
+.-mt-\[50px\] {
+  margin-top: -50px
 }
 
 .inline {
@@ -10,12 +18,12 @@
   height: 100%
 }
 
-.h-\[100px\] {
-  height: 100px
-}
-
 .h-\[90px\] {
   height: 90px
+}
+
+.h-\[100px\] {
+  height: 100px
 }
 
 .w-\[50\%\] {
@@ -28,6 +36,10 @@
 
 .flex-1 {
   flex: 1 1 0%
+}
+
+.flex-col {
+  flex-direction: column
 }
 
 .items-center {
@@ -57,21 +69,11 @@
   padding-bottom: 0.5rem
 }
 
-.text-\[20px\] {
-  font-size: 20px
+.text-\[15px\] {
+  font-size: 15px
 }
 
-.text-white {
+.text-red-500 {
   --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity))
-}
-
-.text-gray-200 {
-  --tw-text-opacity: 1;
-  color: rgb(229 231 235 / var(--tw-text-opacity))
-}
-
-.text-gray-500 {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity))
+  color: rgb(239 68 68 / var(--tw-text-opacity))
 }

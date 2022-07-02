@@ -14,10 +14,16 @@ const initialState: userTypes = {
 };
 
 export const loginUser = createAsyncThunk('users/loginUser', async data => {
-  
   const resp = await axios.post(API_POINT + 'auth_user', {
     username: data.email,
     password: data.password,
+  });
+  return resp;
+});
+
+export const logoutUser = createAsyncThunk('users/logoutUser', async data => {
+  const resp = await axios.post(API_POINT + 'logout', {
+    token: data.token,
   });
   return resp;
 });
@@ -28,17 +34,23 @@ export const userReducer = createSlice({
   reducers: {
     default: state => state,
   },
-  extraReducers: {
-    [loginUser.fulfilled]: (state, action) => {
-      console.log("payload", action.payload.data);
-      
-      return {...state, userdata: action.payload.data}
-    },
-    [loginUser.rejected]: state => {
-      console.log('not');
-      state.userdata = {};
-    },
-  },
+  extraReducers: (builder) => {
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      try {
+        const data = action.payload.data;
+        if (data.status === 'error'){
+          state.userdata = {}
+        }
+        else{
+          state.userdata = action.payload.data;   
+        }
+        
+      } catch (error) {
+        console.log("err");
+        state.userdata = {}
+      }
+    })
+  } ,
 });
 
 // The function below is called a selector and allows us to select a value from

@@ -1,55 +1,75 @@
 import {View, Text} from 'react-native';
-import React, { useEffect, useRef } from 'react';
-import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native';
+import React, {useEffect, useRef} from 'react';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Home, Loading, Login} from '../screens';
-import { useDispatch, useSelector } from 'react-redux';
-import { screenState, startApp } from '../store/reducers/screenReducer';
+import {useDispatch, useSelector} from 'react-redux';
+import NetInfo from '@react-native-community/netinfo';
+import {
+  checkConnection,
+  connectionState,
+  screenState,
+  startApp,
+} from '../store/reducers/screenReducer';
 
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
-
   const isStarted = useSelector(screenState);
+  const islogged = useSelector(state => state.userstate.userdata);
+  const connState = useSelector(connectionState);
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if(!isStarted){ 
-      setTimeout(() => {
-        dispatch(startApp(true));
-      }, 3000);
-    }
-  }, [isStarted])
+  const isEmpty = obj => Object.keys(obj).length === 0;
+
+
+  // useEffect(() => {
+  //   if (!isStarted) {
+  //     setTimeout(() => {
+  //       dispatch(startApp(true));
+  //     }, 3000);
+  //   }
+  // }, [isStarted]);
   
-  const navigationRef = useNavigationContainerRef();
-  const routeNameRef = useRef();
+
+  const renderScreen = () => {
+     if (!isEmpty(islogged)) {
+      return (
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="home"
+          component={Home}
+        />
+      )
+    } else if (isEmpty(islogged)) {
+      return (
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="login"
+          component={Login}
+        />
+      );
+    }
+  };
+
+  const NoConnection = () => {
+    return <Text>no connection</Text>
+  }
 
   return (
-    <NavigationContainer 
-      ref={navigationRef}
-      onReady={() => {
-        routeNameRef.current = navigationRef.getCurrentRoute().name;
-      }}
-      onStateChange={async () => {
-        const previousRouteName = routeNameRef.current;
-        const currentRouteName = navigationRef.getCurrentRoute().name;
-
-        if (previousRouteName !== currentRouteName) {
-          // The line below uses the expo-firebase-analytics tracker
-          // https://docs.expo.io/versions/latest/sdk/firebase-analytics/
-          // Change this line to use another Mobile analytics SDK
-          // await Analytics.setCurrentScreen(currentRouteName);
-        }
-        
-        // Save the current route name for later comparison
-        routeNameRef.current = currentRouteName;
-      }}
-    >
-        <Stack.Navigator initialRouteName='loading'>
-         <Stack.Screen options={{headerShown:false}} name="home" component={Home} />
-         <Stack.Screen options={{headerShown:false}} name="login" component={Login} />
-         <Stack.Screen options={{headerShown:false}} name="loading" component={Loading} />
-        </Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator>
+          {renderScreen()}
+          <Stack.Screen
+              options={{headerShown: false}}
+              name="noconnection"
+              component={NoConnection}
+          />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

@@ -11,16 +11,14 @@ const Loading: React.FC = () => {
   const tw = useTailwind();
 
   const started = useSelector(screenState);
-  const navigation = useNavigation();
-
-  console.log(started, "stated");
-  
+  const islogged = useSelector(state => state.userstate.userdata);  
+  const navigation = useNavigation();      
 
   useEffect(() => {
     if(started){
-      navigation.navigate('login')
+      navigation.navigate(Object.keys(islogged).length !== 0 ? 'home' : 'login')
     }
-  }, [started])
+  }, [islogged, started])
   
 
   return (

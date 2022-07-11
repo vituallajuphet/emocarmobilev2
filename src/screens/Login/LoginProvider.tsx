@@ -8,16 +8,8 @@ const LoginProvider: React.FC<any> = ({children}) => {
   const initialState = {
     contextState: 'loading',
     validation: {
-      fields: {
-        username: {
-          error: false,
-          message: '',
-        },
-        password: {
-          error: false,
-          message: '',
-        },
-      },
+      error: false,
+      message: ""
     },
   };
 
@@ -29,12 +21,8 @@ const LoginProvider: React.FC<any> = ({children}) => {
         return {
           ...state,
           validation: {
-            ...state.validation.fields,
-            [action.payload.property]: {
-              ...state.validation.fields[action.payload.property],
-              error: action.payload.error,
-              message: action.payload.message,
-            },
+            error: action.payload.error,
+            message: action.payload.message,
           },
         };
     }

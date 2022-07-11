@@ -6,9 +6,11 @@ import {Context} from './LoginProvider';
 import {useNavigation} from '@react-navigation/native';
 import {loginUser} from '../../store/reducers/userReducer';
 import {useDispatch, useSelector} from 'react-redux';
-import {SET_STATE} from './context/action';
-import { checkNetConnection } from '../../store/reducers/screenReducer';
-
+import {SET_STATE, VALIDATE} from './context/action';
+import {checkNetConnection} from '../../store/reducers/screenReducer';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import axios from 'axios';
+import { API_POINT } from '../../config';
 
 const LoginView: React.FC = () => {
   const tw = useTailwind();
@@ -25,22 +27,47 @@ const LoginView: React.FC = () => {
     dispatch(loginUser({email, password: pass}));
   };
 
-  useEffect(() => {    
-    dispatch(checkNetConnection());
-    setTimeout(() => {
-      send({type:SET_STATE, payload: 'success'})
-    }, 3000);
+  useEffect(() => {
+    send({type: SET_STATE, payload: 'success'})
   }, [])
+  
+  const userdata = useSelector(state => state.userstate.userdata);
+  const [code, setCode] = useState("code")
 
-  const {username, password} = state.validation.fields;
+  const hasError = state.validation;
+
+  useEffect(() => {    
+    if(userdata?.error){
+      send({
+        type: VALIDATE,
+        payload: {
+          error: true,
+          message: userdata?.error,
+        },
+      });
+    }
+  }, [userdata?.error])
+
+  useEffect(() => {
+      axios.get(API_POINT + 'get_verification_code').then(res => {
+        const data = res.data;
+        if (data?.status === 'success') {
+          setCode(data.data[0].code);
+        }
+      });
+  }, []);
+  
 
   if (state.contextState === 'loading') {
     return (
       <View>
         <Text>Loading</Text>
+        <Text>{state.contextState}</Text>
+       
       </View>
     );
   }
+  
 
   return (
     <View style={tw('flex-1 h-full bg-green-300 flex-col justify-center')}>
@@ -51,6 +78,7 @@ const LoginView: React.FC = () => {
           source={require('../../assets/images/comp_logo.png')}
         />
       </View>
+      <Text>{code}</Text>
       <View style={tw('p-4')}>
         <TextInput
           label="Email"
@@ -60,11 +88,6 @@ const LoginView: React.FC = () => {
             setEmail(txt);
           }}
         />
-        {username.error && (
-          <Text style={tw('text-red-500 text-[15px] mt-1')}>
-            {username.message}
-          </Text>
-        )}
         <View style={tw('mt-4')}>
           <TextInput
             label="Password"
@@ -76,9 +99,9 @@ const LoginView: React.FC = () => {
             secureTextEntry
           />
         </View>
-        {password.error && (
-          <Text style={tw('text-red-500 text-[15px] mt-1')}>
-            {password.message}
+        {hasError.error && (
+          <Text style={tw('text-red-500 text-[16px] mt-2')}>
+            {hasError.message}
           </Text>
         )}
         <View style={tw('mt-4')}>

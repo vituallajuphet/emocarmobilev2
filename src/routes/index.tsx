@@ -5,7 +5,7 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Home, Loading, Login} from '../screens';
+import {Home, Loading, Login, NoConnection} from '../screens';
 import {useDispatch, useSelector} from 'react-redux';
 import NetInfo from '@react-native-community/netinfo';
 import {
@@ -14,38 +14,29 @@ import {
   screenState,
   startApp,
 } from '../store/reducers/screenReducer';
+import LoggedDrawer from './Drawer';
 
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
   const isStarted = useSelector(screenState);
-  const islogged = useSelector(state => state.userstate.userdata);
+  const userdata = useSelector(state => state.userstate.userdata);
   const connState = useSelector(connectionState);
 
   const dispatch = useDispatch();
 
-  const isEmpty = obj => Object.keys(obj).length === 0;
-
-
-  // useEffect(() => {
-  //   if (!isStarted) {
-  //     setTimeout(() => {
-  //       dispatch(startApp(true));
-  //     }, 3000);
-  //   }
-  // }, [isStarted]);
-  
+  const hasToken = obj => obj.token_value !== undefined;
 
   const renderScreen = () => {
-     if (!isEmpty(islogged)) {
+     if (hasToken(userdata)) {       
       return (
         <Stack.Screen
           options={{headerShown: false}}
           name="home"
-          component={Home}
+          component={LoggedDrawer}
         />
       )
-    } else if (isEmpty(islogged)) {
+    } else if (!hasToken(userdata)) {
       return (
         <Stack.Screen
           options={{headerShown: false}}
@@ -56,9 +47,6 @@ const Routes = () => {
     }
   };
 
-  const NoConnection = () => {
-    return <Text>no connection</Text>
-  }
 
   return (
     <NavigationContainer>

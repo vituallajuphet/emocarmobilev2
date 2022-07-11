@@ -16,6 +16,7 @@ import tailwind from './tailwind.json';
 import Routes from './src/routes';
 import {Provider as StoreProvider} from 'react-redux';
 import store from './src/store';
+import 'react-native-gesture-handler';
 
 const App = () => {
   return (

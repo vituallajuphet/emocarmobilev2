@@ -10,7 +10,9 @@ export interface userTypes {
 }
 
 const initialState: userTypes = {
-  userdata: {}
+  userdata: {
+    error:"",
+  }
 };
 
 export const loginUser = createAsyncThunk('users/loginUser', async data => {
@@ -37,17 +39,16 @@ export const userReducer = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loginUser.fulfilled, (state, action) => {
       try {
-        const data = action.payload.data;
+        const data = action.payload.data.data;
         if (data.status === 'error'){
-          state.userdata = {}
+          state.userdata = {error: data.message}
         }
         else{
-          state.userdata = action.payload.data;   
+          state.userdata = data;   
         }
         
       } catch (error) {
-        console.log("err");
-        state.userdata = {}
+        state.userdata = {error: error}
       }
     })
   } ,

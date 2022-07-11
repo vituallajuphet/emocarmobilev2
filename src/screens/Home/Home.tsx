@@ -16,7 +16,7 @@ const Home: React.FC = () => {
     <View style={tw('flex-1 h-full bg-green-300')}>
        <Text>Home</Text>
        <Button onPress={()=> {
-         dispatch(logoutUser);
+         dispatch(logoutUser());
        }}>Logout</Button>
     </View>
   );
